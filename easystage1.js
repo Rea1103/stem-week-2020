@@ -5,6 +5,8 @@ const qn = [
   {question: 'Name of the silent black cat that deputed in 1919', inputBox: 5, key: 'Letters collected: ned'},
   {question: 'Name of a garden', inputBox: 4, key: 'Letters collected: nede'}]
 
+const hintList = ['Hint: yellow boi', 'Hint: released in 2011', 'Hint: name of a game console', 'Hint: cartoon character', 'Hint: use your letters']
+
 let index = 0
 
 function loadpage(){
@@ -12,10 +14,12 @@ function loadpage(){
   document.getElementById('qn').textContent = qn[index].question
 
   //displays letters unlocked
+  if (index > 0){
+    fetch('/testAnswer', )
+  }
   document.getElementById('keyQn').textContent = qn[index].key
 
   boxDisplay()
-  //console.log(index)
 }
 
 function boxDisplay(){
@@ -26,21 +30,38 @@ function boxDisplay(){
     inputBox = document.createElement('input')
     inputBox.className += 'letter'
     inputBox.setAttribute('maxlength', '1')
-    container.appendChild(inputBox)
+    inputBox.setAttribute('name', 'ans')
+    container.appendChild(inputBox) 
     numberInputBox --
   }
 }
 
-
 function check(event){
-  //appending answers here
   if (index !== 4){
     index ++
     document.getElementById('word d-inline-block').innerHTML = ''
     loadpage()
   }
 }
+
 document.getElementById("submit").addEventListener('click', function(event){
-  event.preventDefault();
-  check();
+  var answer = append()
+  fetch('/testAnswer', {method: 'POST', body: answer}) 
+  event.preventDefault()
+  check()
 })
+
+document.getElementById("hint").addEventListener('click', function(event){
+  alert(hintList[index])
+})
+
+function append(){
+  var nodeString = ''
+  var numberInputBox = document.getElementsByName('ans').length
+  for (i=0; i < numberInputBox; i++){
+    var x = document.getElementsByName('ans')[i].value
+    nodeString += x
+  }
+  //console.log(JSON.stringify(nodeString))
+  return JSON.stringify(nodeString)
+}
