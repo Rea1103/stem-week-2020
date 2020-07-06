@@ -7,9 +7,14 @@ const qn = [
 
 const hintList = ['Hint: yellow boi', 'Hint: released in 2011', 'Hint: name of a game console', 'Hint: cartoon character', 'Hint: use your letters']
 
+const nextButton = document.getElementById('next-container')
+
 let index = 0
 
 function loadpage(){
+  //hides the next button
+  nextButton.classList.add('hide')
+  //nextButton.className += 'hide'
   //displays qn
   document.getElementById('qn').textContent = qn[index].question
 
@@ -42,11 +47,36 @@ function check(event){
     document.getElementById('word d-inline-block').innerHTML = ''
     loadpage()
   }
+  else{
+    //do the check
+    var correct = true
+    if (correct == true){
+      nextButton.classList.remove('hide')
+    }
+  }
 }
 
 document.getElementById("submit").addEventListener('click', function(event){
   var answer = append()
-  fetch('/testAnswer', {method: 'POST', body: answer}) 
+
+  const option = {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(answer),
+    credentials: 'include'
+  }
+
+  fetch('https://stem-week-cipher.herokuapp.com/testAnswer', option)
+  .then(response => response.json()) //if response is json in nature
+  /*.then(function (data) {
+    //do something with data
+  })*/
+  .catch(function (error) {
+    //do smth when error happens
+  })
+
   event.preventDefault()
   check()
 })
@@ -62,6 +92,5 @@ function append(){
     var x = document.getElementsByName('ans')[i].value
     nodeString += x
   }
-  //console.log(JSON.stringify(nodeString))
-  return JSON.stringify(nodeString)
+  return nodeString
 }
