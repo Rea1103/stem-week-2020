@@ -53,12 +53,68 @@
       <div class='text-center'>
         <button type='button' class='hint' id='hint'>Reveal Hint</button>
       </div>
-      <!---------------------------->           
+      <!---------------------------->
+      <br><br>
+      <div class='text-center' id='next-container'>
+          <a href = '/'>
+          <button type='button' class='next'>Return home</button>
+          </a>
+          <a href = 'easy_stage5.html'>
+          <button type='button' class='next' id='next'>Next stage</button>
+          </a>
+      </div>           
     </div>
   </body>
   <script>
     document.getElementById("hint").addEventListener('click', function(event){
       alert('Find hints at https://medium.com/@dmitryrodionoff/lecture-3-1-scripts-and-calligraphy-5ad27462bc23')
     })
+
+    const nextButton = document.getElementById('next-container')
+
+      nextButton.classList.add('hide')
+
+      document.getElementById("submit").addEventListener('click', function(event){
+        var answer = append()
+        event.preventDefault()
+        showNext() 
+
+        const option = {
+          method: 'POST',
+          headers: {
+          'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(answer),
+          credentials: 'include'
+        }
+
+        fetch('https://stem-week-cipher.herokuapp.com/testAnswer', option)
+        .then(response => response.json()) //if response is json in nature
+        .then(function (data) {
+          //do something with data
+        })
+        .catch(function (error) {
+          //do smth when error happens
+        })
+        })
+        
+      function showNext(){
+        //do the check
+        var correct = true
+        if (correct == true){
+          nextButton.classList.remove('hide')
+        }
+      }
+
+      function append(){
+        var nodeString = ''
+        var numberInputBox = document.getElementsByName('key_input[]').length
+        for (i=0; i < numberInputBox; i++){
+          var x = document.getElementsByName('key_input[]')[i].value
+          nodeString += x
+        }
+        //console.log(nodeString)
+        return nodeString
+        }
   </script>
 </html>
